@@ -11,8 +11,10 @@ RUN mvn clean package -DskipTests -B
 FROM openjdk:21-slim AS runtime-stage
 WORKDIR /app
 
+ENV PORT=8080
+
 COPY --from=build-stage /app/target/*.jar app.jar
 
-EXPOSE 8080
+EXPOSE $PORT
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=$PORT"]
