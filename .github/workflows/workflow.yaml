@@ -35,6 +35,8 @@ jobs:
         needs: test
         if: ${{ github.ref_name == 'master' }}
         runs-on: ubuntu-latest
+        outputs:
+            image_name: ${{ steps.set_image_name.outputs.IMAGE_NAME }}
 
         steps:
         - uses: actions/checkout@v4
@@ -60,3 +62,15 @@ jobs:
             file: ./Dockerfile
             push: true
             tags: ${{ steps.set_image_name.outputs.IMAGE_NAME }}
+
+    deploy:
+        if: ${{ github.ref_name == 'master' }}
+        needs: docker
+        runs-on: ubuntu-latest
+        steps:
+            - name: Deploy to Render
+              uses: gh-actions-workflows/deploy-docker-render@v1.3
+              with:
+                deploy-hook: ${{ secrets.RENDER_DEPLOY_HOOK }}
+                render-api-key: ${{ secrets.RENDER_API_KEY }}
+                image-url: ${{ needs.docker.outputs.image_name }}
