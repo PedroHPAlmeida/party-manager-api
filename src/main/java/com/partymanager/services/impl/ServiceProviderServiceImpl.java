@@ -3,6 +3,7 @@ package com.partymanager.services.impl;
 import com.partymanager.controllers.dtos.request.ServiceProviderRequestDTO;
 import com.partymanager.controllers.dtos.response.ServiceProviderResponseDTO;
 import com.partymanager.exception.exceptions.ResourceNotFoundException;
+import com.partymanager.mappers.ServiceProviderMapper;
 import com.partymanager.models.Event;
 import com.partymanager.models.ServiceProvider;
 import com.partymanager.repositories.EventRepository;
@@ -18,27 +19,15 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 
     private final EventRepository eventRepository;
     private final ServiceProviderRepository serviceProviderRepository;
+    private final ServiceProviderMapper serviceProviderMapper;
 
     @Override
     @Transactional
     public ServiceProviderResponseDTO addServiceProviderToEvent(Long eventId, ServiceProviderRequestDTO requestDTO) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new ResourceNotFoundException("Evento não encontrado com ID: " + eventId));
-
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setType(requestDTO.getType());
-        serviceProvider.setName(requestDTO.getName());
-        serviceProvider.setEvent(event);
-
+        ServiceProvider serviceProvider = serviceProviderMapper.toEntity(requestDTO, event);
         serviceProvider = serviceProviderRepository.save(serviceProvider);
-        return convertToResponseDTO(serviceProvider);
-    }
-
-    private ServiceProviderResponseDTO convertToResponseDTO(ServiceProvider serviceProvider) {
-        ServiceProviderResponseDTO responseDTO = new ServiceProviderResponseDTO();
-        responseDTO.setId(serviceProvider.getId());
-        responseDTO.setType(serviceProvider.getType());
-        responseDTO.setName(serviceProvider.getName());
-        return responseDTO;
+        return serviceProviderMapper.toResponseDTO(serviceProvider);
     }
 }
