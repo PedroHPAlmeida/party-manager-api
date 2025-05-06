@@ -5,4 +5,5 @@ import com.partymanager.controllers.dtos.response.ServiceProviderResponseDTO;
 
 public interface ServiceProviderService {
     ServiceProviderResponseDTO addServiceProviderToEvent(Long eventId, ServiceProviderRequestDTO requestDTO);
+    void removeServiceProviderFromEvent(Long eventId, Long serviceProviderId);
 }
