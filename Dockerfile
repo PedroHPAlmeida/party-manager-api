@@ -11,10 +11,14 @@ RUN mvn clean package -DskipTests -B
 FROM openjdk:21-slim AS runtime-stage
 WORKDIR /app
 
-ENV PORT=8080
+ENV PORT=${PORT} \
+    PROFILE=${PROFILE} \
+    DB_URL=${DB_URL} \
+    DB_USERNAME=${DB_USERNAME} \
+    DB_PASSWORD=${DB_PASSWORD}
 
 COPY --from=build-stage /app/target/*.jar app.jar
 
-EXPOSE $PORT
+EXPOSE ${PORT}
 
-ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=$PORT"]
+CMD ["java", "-Xmx512m", "-jar", "-Dserver.port=${PORT}", "-Dspring.profiles.active=${PROFILE}", "app.jar"]
