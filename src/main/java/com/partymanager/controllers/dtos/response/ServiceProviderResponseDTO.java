@@ -1,6 +1,6 @@
 package com.partymanager.controllers.dtos.response;
 
-import com.partymanager.enums.ServiceType;
+import com.partymanager.models.enums.ServiceType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,5 +10,4 @@ public class ServiceProviderResponseDTO {
     private Long id;
     private ServiceType type;
     private String name;
-
 }

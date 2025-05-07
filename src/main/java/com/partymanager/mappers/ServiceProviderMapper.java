@@ -8,10 +8,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ServiceProviderMapper {
-
-    /**
-     * Converte DTO de requisição para entidade
-     */
     public ServiceProvider toEntity(ServiceProviderRequestDTO dto, Event event) {
         if (dto == null) {
             return null;
@@ -25,9 +21,6 @@ public class ServiceProviderMapper {
         return entity;
     }
 
-    /**
-     * Converte entidade para DTO de resposta
-     */
     public ServiceProviderResponseDTO toResponseDTO(ServiceProvider entity) {
         if (entity == null) {
             return null;
@@ -39,22 +32,5 @@ public class ServiceProviderMapper {
         dto.setType(entity.getType());
 
         return dto;
-    }
-
-    /**
-     * Atualiza uma entidade existente com dados do DTO
-     */
-    public void updateEntityFromDTO(ServiceProviderRequestDTO dto, ServiceProvider entity) {
-        if (dto == null || entity == null) {
-            return;
-        }
-
-        if (dto.getName() != null) {
-            entity.setName(dto.getName());
-        }
-
-        if (dto.getType() != null) {
-            entity.setType(dto.getType());
-        }
     }
 }

@@ -1,6 +1,6 @@
 package com.partymanager.controllers.dtos.request;
 
-import com.partymanager.enums.ServiceType;
+import com.partymanager.models.enums.ServiceType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

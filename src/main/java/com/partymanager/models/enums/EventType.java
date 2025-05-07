@@ -1,4 +1,4 @@
-package com.partymanager.enums;
+package com.partymanager.models.enums;
 
 public enum EventType {
     WEDDING,

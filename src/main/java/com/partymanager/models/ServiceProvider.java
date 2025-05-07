@@ -1,6 +1,6 @@
 package com.partymanager.models;
 
-import com.partymanager.enums.ServiceType;
+import com.partymanager.models.enums.ServiceType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServiceProvider {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

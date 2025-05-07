@@ -18,17 +18,14 @@ public class EventMapper {
         this.serviceProviderMapper = serviceProviderMapper;
     }
 
-    /**
-     * Converte DTO de requisição para entidade
-     */
     public Event toEntity(EventRequestDTO dto, User user) {
         if (dto == null) {
             return null;
         }
 
         Event event = new Event();
-        event.setEventName(dto.getEventName());
-        event.setEventType(dto.getEventType());
+        event.setName(dto.getName());
+        event.setType(dto.getType());
         event.setDate(dto.getDate());
         event.setLocation(dto.getLocation());
         event.setUser(user);
@@ -36,9 +33,6 @@ public class EventMapper {
         return event;
     }
 
-    /**
-     * Converte entidade para DTO de resposta
-     */
     public EventResponseDTO toResponseDTO(Event entity) {
         if (entity == null) {
             return null;
@@ -46,22 +40,13 @@ public class EventMapper {
 
         EventResponseDTO dto = new EventResponseDTO();
         dto.setId(entity.getId());
-        dto.setEventName(entity.getEventName());
-        dto.setEventType(entity.getEventType());
+        dto.setName(entity.getName());
+        dto.setType(entity.getType());
         dto.setDate(entity.getDate());
         dto.setLocation(entity.getLocation());
 
-        if (entity.getUser() != null) {
-            dto.setUserId(entity.getUser().getId());
-            dto.setUserName(entity.getUser().getName());
-        }
-
         if (entity.getServiceProviders() != null) {
-            dto.setServiceProviders(
-                    entity.getServiceProviders().stream()
-                            .map(serviceProviderMapper::toResponseDTO)
-                            .collect(Collectors.toList())
-            );
+            dto.setServiceProviders(entity.getServiceProviders().stream().map(serviceProviderMapper::toResponseDTO).collect(Collectors.toList()));
         } else {
             dto.setServiceProviders(Collections.emptyList());
         }
