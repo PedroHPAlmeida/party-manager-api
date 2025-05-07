@@ -1,4 +1,4 @@
-package com.partymanager.exception.exceptions;
+package com.partymanager.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException{
     public ResourceNotFoundException(String message) {

@@ -1,4 +1,4 @@
-package com.partymanager.exception.exceptionDTO;
+package com.partymanager.handlers.dtos;
 
 import java.time.LocalDateTime;
 
