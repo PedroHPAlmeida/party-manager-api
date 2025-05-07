@@ -29,9 +29,6 @@ public class UserMapper {
     public void updateEntityFromDTO(UserRequestDTO requestDTO, User user) {
         user.setName(requestDTO.getName());
         user.setEmail(requestDTO.getEmail());
-        if (requestDTO.getPassword() != null && !requestDTO.getPassword().isEmpty()) {
-            user.setPassword(requestDTO.getPassword());
-        }
         user.setBirthdate(requestDTO.getBirthdate());
     }
 }

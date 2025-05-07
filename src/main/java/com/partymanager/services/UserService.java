@@ -7,6 +7,7 @@ import com.partymanager.mappers.UserMapper;
 import com.partymanager.models.User;
 import com.partymanager.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +20,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserResponseDTO createUser(UserRequestDTO requestDTO) {
         User user = userMapper.toEntity(requestDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user = userRepository.save(user);
         return userMapper.toResponseDTO(user);
     }
@@ -46,7 +49,16 @@ public class UserService {
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + userId));
 
+        String currentPassword = existingUser.getPassword();
+
         userMapper.updateEntityFromDTO(requestDTO, existingUser);
+
+        if (requestDTO.getPassword() != null && !requestDTO.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
+        } else {
+            existingUser.setPassword(currentPassword);
+        }
+
         existingUser = userRepository.save(existingUser);
 
         return userMapper.toResponseDTO(existingUser);
@@ -58,5 +70,9 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com ID: " + userId));
 
         userRepository.delete(user);
+    }
+
+    public boolean checkPassword(String rawPassword, String encodedPassword) {
+        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 }
