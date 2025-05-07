@@ -32,9 +32,7 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EventResponseDTO> updateEvent(
-            @PathVariable Long id,
-            @RequestBody EventRequestDTO requestDTO) {
+    public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable Long id, @RequestBody EventRequestDTO requestDTO) {
         EventResponseDTO responseDTO = eventService.updateEvent(id, requestDTO);
         return ResponseEntity.ok(responseDTO);
     }
@@ -46,18 +44,13 @@ public class EventController {
     }
 
     @PostMapping("/{eventId}/service-providers")
-    public ResponseEntity<ServiceProviderResponseDTO> addServiceProvider(
-            @PathVariable Long eventId,
-            @RequestBody ServiceProviderRequestDTO request) {
-        ServiceProviderResponseDTO responseDTO =
-                serviceProviderService.addServiceProviderToEvent(eventId, request);
+    public ResponseEntity<ServiceProviderResponseDTO> addServiceProvider(@PathVariable Long eventId, @RequestBody ServiceProviderRequestDTO request) {
+        ServiceProviderResponseDTO responseDTO = serviceProviderService.addServiceProviderToEvent(eventId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @DeleteMapping("/{eventId}/service-providers/{providerId}")
-    public ResponseEntity<Void> removeServiceProvider(
-            @PathVariable Long eventId,
-            @PathVariable Long providerId) {
+    public ResponseEntity<Void> removeServiceProvider(@PathVariable Long eventId, @PathVariable Long providerId) {
         serviceProviderService.removeServiceProviderFromEvent(eventId, providerId);
         return ResponseEntity.noContent().build();
     }
