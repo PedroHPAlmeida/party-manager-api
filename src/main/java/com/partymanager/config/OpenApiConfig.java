@@ -22,7 +22,7 @@ public class OpenApiConfig {
                         .version("v0.0.1")
                         .contact(new Contact()
                                 .name("Party Manager Team")
-                                .email("contact@partymanager.com"))
+                                .email("partymanagersass@gmail.com"))
                         .license(new License()
                                 .name("MIT License")
                                 .url("https://opensource.org/licenses/MIT")))
