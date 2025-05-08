@@ -6,6 +6,13 @@ import com.partymanager.controllers.dtos.response.EventResponseDTO;
 import com.partymanager.controllers.dtos.response.ServiceProviderResponseDTO;
 import com.partymanager.services.EventService;
 import com.partymanager.services.ServiceProviderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,43 +21,91 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/events")
 @RequiredArgsConstructor
+@Tag(name = "Event Management", description = "APIs for managing events and their service providers")
 public class EventController {
 
     private final ServiceProviderService serviceProviderService;
     private final EventService eventService;
 
     @PostMapping
-    public ResponseEntity<EventResponseDTO> createEvent(@RequestBody EventRequestDTO requestDTO) {
+    @Operation(summary = "Create a new event", description = "Creates a new event with the provided details")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Event created successfully",
+                    content = @Content(schema = @Schema(implementation = EventResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
+    public ResponseEntity<EventResponseDTO> createEvent(
+            @Parameter(description = "Event details", required = true) @RequestBody EventRequestDTO requestDTO) {
         EventResponseDTO responseDTO = eventService.createEvent(requestDTO);
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EventResponseDTO> getEvent(@PathVariable Long id) {
+    @Operation(summary = "Get event by ID", description = "Retrieves event details by its unique identifier")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Event found",
+                    content = @Content(schema = @Schema(implementation = EventResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Event not found")
+    })
+    public ResponseEntity<EventResponseDTO> getEvent(
+            @Parameter(description = "Event ID", required = true) @PathVariable Long id) {
         EventResponseDTO responseDTO = eventService.getEventById(id);
         return ResponseEntity.ok(responseDTO);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EventResponseDTO> updateEvent(@PathVariable Long id, @RequestBody EventRequestDTO requestDTO) {
+    @Operation(summary = "Update an event", description = "Updates an existing event with the provided details")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Event updated successfully",
+                    content = @Content(schema = @Schema(implementation = EventResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Event not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
+    public ResponseEntity<EventResponseDTO> updateEvent(
+            @Parameter(description = "Event ID", required = true) @PathVariable Long id,
+            @Parameter(description = "Updated event details", required = true) @RequestBody EventRequestDTO requestDTO) {
         EventResponseDTO responseDTO = eventService.updateEvent(id, requestDTO);
         return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
+    @Operation(summary = "Delete an event", description = "Deletes an event by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Event deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Event not found")
+    })
+    public ResponseEntity<Void> deleteEvent(
+            @Parameter(description = "Event ID", required = true) @PathVariable Long id) {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{eventId}/service-providers")
-    public ResponseEntity<ServiceProviderResponseDTO> addServiceProvider(@PathVariable Long eventId, @RequestBody ServiceProviderRequestDTO request) {
+    @Operation(summary = "Add service provider to event",
+            description = "Adds a new service provider to an existing event")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Service provider added successfully",
+                    content = @Content(schema = @Schema(implementation = ServiceProviderResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Event not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
+    public ResponseEntity<ServiceProviderResponseDTO> addServiceProvider(
+            @Parameter(description = "Event ID", required = true) @PathVariable Long eventId,
+            @Parameter(description = "Service provider details", required = true) @RequestBody ServiceProviderRequestDTO request) {
         ServiceProviderResponseDTO responseDTO = serviceProviderService.addServiceProviderToEvent(eventId, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @DeleteMapping("/{eventId}/service-providers/{providerId}")
-    public ResponseEntity<Void> removeServiceProvider(@PathVariable Long eventId, @PathVariable Long providerId) {
+    @Operation(summary = "Remove service provider from event",
+            description = "Removes a service provider from an existing event")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Service provider removed successfully"),
+            @ApiResponse(responseCode = "404", description = "Event or service provider not found")
+    })
+    public ResponseEntity<Void> removeServiceProvider(
+            @Parameter(description = "Event ID", required = true) @PathVariable Long eventId,
+            @Parameter(description = "Service provider ID", required = true) @PathVariable Long providerId) {
         serviceProviderService.removeServiceProviderFromEvent(eventId, providerId);
         return ResponseEntity.noContent().build();
     }
