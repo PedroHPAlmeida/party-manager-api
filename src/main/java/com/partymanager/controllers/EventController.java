@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
 @Tag(name = "Event Management", description = "APIs for managing events and their service providers")
 public class EventController {
@@ -80,7 +80,7 @@ public class EventController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{eventId}/service-providers")
+    @PostMapping("/{id}/service-providers")
     @Operation(summary = "Add service provider to event",
             description = "Adds a new service provider to an existing event")
     @ApiResponses(value = {
@@ -90,13 +90,13 @@ public class EventController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     public ResponseEntity<ServiceProviderResponseDTO> addServiceProvider(
-            @Parameter(description = "Event ID", required = true) @PathVariable Long eventId,
+            @Parameter(description = "Event ID", required = true) @PathVariable Long id,
             @Parameter(description = "Service provider details", required = true) @RequestBody ServiceProviderRequestDTO request) {
-        ServiceProviderResponseDTO responseDTO = serviceProviderService.addServiceProviderToEvent(eventId, request);
+        ServiceProviderResponseDTO responseDTO = serviceProviderService.addServiceProviderToEvent(id, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
-    @DeleteMapping("/{eventId}/service-providers/{providerId}")
+    @DeleteMapping("/{id}/service-providers/{providerId}")
     @Operation(summary = "Remove service provider from event",
             description = "Removes a service provider from an existing event")
     @ApiResponses(value = {
@@ -104,9 +104,9 @@ public class EventController {
             @ApiResponse(responseCode = "404", description = "Event or service provider not found")
     })
     public ResponseEntity<Void> removeServiceProvider(
-            @Parameter(description = "Event ID", required = true) @PathVariable Long eventId,
+            @Parameter(description = "Event ID", required = true) @PathVariable Long id,
             @Parameter(description = "Service provider ID", required = true) @PathVariable Long providerId) {
-        serviceProviderService.removeServiceProviderFromEvent(eventId, providerId);
+        serviceProviderService.removeServiceProviderFromEvent(id, providerId);
         return ResponseEntity.noContent().build();
     }
 }
