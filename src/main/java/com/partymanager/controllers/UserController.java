@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-@Tag(name = "User Management", description = "APIs for managing user accounts")
+@Tag(name = "Users", description = "APIs for managing user accounts")
 public class UserController {
 
     private final UserService userService;

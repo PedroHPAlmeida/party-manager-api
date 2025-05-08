@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/events")
 @RequiredArgsConstructor
-@Tag(name = "Event Management", description = "APIs for managing events and their service providers")
+@Tag(name = "Events", description = "APIs for managing events and their service providers")
 public class EventController {
 
     private final ServiceProviderService serviceProviderService;
