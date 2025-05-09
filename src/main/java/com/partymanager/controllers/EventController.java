@@ -8,6 +8,7 @@ import com.partymanager.services.EventService;
 import com.partymanager.services.ServiceProviderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -57,14 +58,20 @@ public class EventController {
     }
 
     @GetMapping
-    @Operation(summary = "Get all events", description = "Retrieves a list of all events")
+    @Operation(
+            summary = "Get all events for a user",
+            description = "Retrieves a list of all events belonging to the specified user",
+            parameters = {
+                    @Parameter(name = "userId", description = "ID of the user whose events will be fetched", required = true, in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int64"))
+            }
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of events retrieved successfully",
                     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EventResponseDTO.class)))
             )
     })
-    public ResponseEntity<List<EventResponseDTO>> getAllEvents() {
-        List<EventResponseDTO> responseDTOs = eventService.getAllEvents();
+    public ResponseEntity<List<EventResponseDTO>> getAllEventsByUser(@Parameter(hidden = true) @RequestParam(name = "userId", required = true) Long userId) {
+        List<EventResponseDTO> responseDTOs = eventService.getAllEventsByUser(userId);
         return ResponseEntity.ok(responseDTOs);
     }
 

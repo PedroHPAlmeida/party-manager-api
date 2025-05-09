@@ -70,8 +70,8 @@ public class EventService {
         return eventMapper.toResponseDTO(existingEvent);
     }
 
-    public List<EventResponseDTO> getAllEvents() {
-        List<Event> events = eventRepository.findAll();
+    public List<EventResponseDTO> getAllEventsByUser(Long userId) {
+        List<Event> events = eventRepository.findByUserId(userId);
         return events.stream().map(eventMapper::toResponseDTO).toList();
     }
 
