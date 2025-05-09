@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +68,11 @@ public class EventService {
 
         // Retorna o DTO de resposta
         return eventMapper.toResponseDTO(existingEvent);
+    }
+
+    public List<EventResponseDTO> getAllEvents() {
+        List<Event> events = eventRepository.findAll();
+        return events.stream().map(eventMapper::toResponseDTO).toList();
     }
 
     @Transactional(readOnly = true)

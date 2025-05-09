@@ -8,6 +8,7 @@ import com.partymanager.services.EventService;
 import com.partymanager.services.ServiceProviderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/events")
@@ -51,6 +54,18 @@ public class EventController {
             @Parameter(description = "Event ID", required = true) @PathVariable Long id) {
         EventResponseDTO responseDTO = eventService.getEventById(id);
         return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping
+    @Operation(summary = "Get all events", description = "Retrieves a list of all events")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of events retrieved successfully",
+                    content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = EventResponseDTO.class)))
+            )
+    })
+    public ResponseEntity<List<EventResponseDTO>> getAllEvents() {
+        List<EventResponseDTO> responseDTOs = eventService.getAllEvents();
+        return ResponseEntity.ok(responseDTOs);
     }
 
     @PutMapping("/{id}")
