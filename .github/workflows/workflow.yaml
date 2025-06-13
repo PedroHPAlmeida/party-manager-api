@@ -75,4 +75,4 @@ jobs:
           deploy-hook: ${{ secrets.RENDER_DEPLOY_HOOK }}
           render-api-key: ${{ secrets.RENDER_API_KEY }}
           image-url: ${{ needs.docker.outputs.image_name }}
-          wait-for-deployment: false
+          wait-for-deployment: true
